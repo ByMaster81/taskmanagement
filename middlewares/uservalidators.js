@@ -3,6 +3,8 @@ import {body} from "express-validator";
 export const validateUserName = [
     
     body("name")
+        .isEmpty()
+        .withMessage('Name cant be empty')
         .isString()
         .withMessage("Name must be string")
         .custom(value => {
@@ -16,6 +18,8 @@ export const validateUserName = [
 
 export const validateEmail = [
     body("email")
+        .isEmpty()
+        .withMessage('Email cant be empty')
         .isString()
         .withMessage("Email info must be string")
         .isEmail()
