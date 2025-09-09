@@ -15,7 +15,7 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
 app.use('/assignments', assignmentRoutes);
-
+app.use(express.static('public'));
 
 
 app.get('/', (req, res) => {

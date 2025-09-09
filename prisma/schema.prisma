@@ -18,15 +18,20 @@ model User {
   id    String @id @default(uuid())
   name  String
   email String @unique
-  tasks Assignment[]
+  tasks Assignment[] @relation(onDelete: Cascade)
 }
 
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+}
 
 model Task {
   id          String       @id @default(uuid())
   title       String
   description String?
-  status      String       @default("pending") // pending, in_progress, done
+  status      TaskStatus   @default("pending") // pending, in_progress, done
   assignments Assignment[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

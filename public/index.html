@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamTask API Vitrini</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        
+        .site-title {
+            font-size: 48px; 
+            font-weight: bold; 
+            text-align: center; 
+}
+
+        body {  padding-bottom: 5rem;
+                font-size: 14px;
+                padding-bottom: 5rem; 
+            }
+        .grid {
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+
+        article { padding: 1.5rem; }
+        hgroup { margin-bottom: 1rem; }
+        small { color: var(--secondary); }
+        ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+        }
+        ul li:nth-child(odd) {
+            background-color: var(--card-background-color);
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        
+        <h class="site-title">TeamTask API Vitrini</h>
+        
+
+        <!--KULLANICILAR-->
+        <article>
+            <hgroup>
+                <h2>Kullanıcılar</h2>
+                
+            </hgroup>
+            <form id="user-form">
+                <div class="grid">
+                    <input type="text" name="name" placeholder="İsim ve Soyisim" required>
+                    <input type="email" name="email" placeholder="E-posta Adresi" required>
+                </div>
+                <button type="submit">Kullanıcı Ekle</button>
+            </form>
+            <hr>
+            <h3>Mevcut Kullanıcılar</h3>
+            <ul id="user-list"></ul>
+        </article>
+
+        <!-- GÖREVLER -->
+        <article>
+            <hgroup>
+                <h2>Görevler</h2>
+                
+            </hgroup>
+            <form id="task-form">
+                <input type="text" name="title" placeholder="Görev Başlığı" required>
+                <textarea name="description" placeholder="Görev Açıklaması (Opsiyonel)" rows="3"></textarea>
+                <button type="submit">Görev Ekle</button>
+            </form>
+            <hr>
+            <h3>Mevcut Görevler</h3>
+            <ul id="task-list"></ul>
+        </article>
+
+        <!-- ATAMALAR BÖLÜMÜ -->
+        <article>
+            <hgroup>
+                <h2>Görev Atamaları</h2>
+            </hgroup>
+            <form id="assignment-form">
+                <div class="grid">
+                    <select id="user-select" name="userId" required>
+                        <option value="" disabled selected>Önce Kullanıcı Seçin...</option>
+                    </select>
+                    <select id="task-select" name="taskId" required>
+                        <option value="" disabled selected>Sonra Görev Seçin...</option>
+                    </select>
+                </div>
+                <button type="submit">Görevi Ata</button>
+            </form>
+            <hr>
+            <h3>Mevcut Atamalar</h3>
+            <ul id="assignment-list"></ul>
+        </article>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
