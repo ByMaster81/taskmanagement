@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
+import {validateUserName, validateEmail} from '../middlewares/uservalidators.js';
+import { validationResult } from 'express-validator';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -16,7 +18,13 @@ router.get('/', async (req, res) => {
 
 
 // Create
-router.post('/', async (req, res) => {
+router.post('/', validateUserName, validateEmail, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array()});
+  }
+  
+  
   try{
     const { name, email } = req.body;
     const user = await prisma.user.create({ data: { name, email } });
