@@ -14,11 +14,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+enum  Role {
+  ADMINUSER
+  USER
+}
+
+
+
 model User {
   id    String @id @default(uuid())
   name  String
   email String @unique
-  tasks Assignment[] @relation(onDelete: Cascade)
+  password String
+  role Role @default(USER)
+  tasks Assignment[] 
 }
 
 enum TaskStatus {
@@ -31,7 +41,7 @@ model Task {
   id          String       @id @default(uuid())
   title       String
   description String?
-  status      TaskStatus   @default("pending") // pending, in_progress, done
+  status      TaskStatus   @default(PENDING) // pending, in_progress, done
   assignments Assignment[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -39,9 +49,10 @@ model Task {
 
 model Assignment {
   id      String   @id @default(uuid())
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   task    Task     @relation(fields: [taskId], references: [id])
   taskId  String
   assignedAt DateTime @default(now())
+  @@unique([userId, taskId])
 }

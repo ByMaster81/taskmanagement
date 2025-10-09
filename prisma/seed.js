@@ -1,24 +1,42 @@
-import { PrismaClient } from '@prisma/client';
+// prisma/seed.js
+
+// PrismaClient ve enum'ları @prisma/client'tan import ediyoruz
+import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Kullanıcı ekle
-  const user1 = await prisma.user.create({
+  console.log('Önceki veriler siliniyor...');
+  // Her çalıştırmada tutarlı bir başlangıç için eski verileri temizliyoruz.
+  await prisma.assignment.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.user.deleteMany();
+  console.log('Önceki veriler silindi.');
+
+  console.log('Seed verisi ekleniyor...');
+
+  // 1. Kullanıcıları rollerine ve düz metin şifrelerine göre oluştur
+  const adminUser = await prisma.user.create({
     data: {
-      name: 'Ahmet',
+      name: 'Ahmet (Admin)',
       email: 'ahmet@example.com',
+      password: 'ahmet1234_düz_metin', // Şifre doğrudan yazılıyor
+      role: Role.ADMINUSER,            // Rol enum kullanılarak atanıyor
     },
   });
 
-  const user2 = await prisma.user.create({
+  const memberUser = await prisma.user.create({
     data: {
-      name: 'Ayşe',
+      name: 'Ayşe (Member)',
       email: 'ayse@example.com',
+      password: 'ayse1234_düz_metin',  // Şifre doğrudan yazılıyor
+      role: Role.USER,                 // Varsayılan rolü de belirtebiliriz
     },
   });
 
-  // Task ekle
+  console.log('Kullanıcılar oluşturuldu.');
+
+  // 2. Görevleri oluştur
   const task1 = await prisma.task.create({
     data: {
       title: 'Frontend geliştirme',
@@ -33,26 +51,48 @@ async function main() {
     },
   });
 
-  // Assignment ekle (task-user ilişkisi)
+  const task3 = await prisma.task.create({
+    data: {
+      title: 'Veritabanı optimizasyonu',
+      description: 'Sorgu performansları incelenecek',
+    },
+  });
+
+  console.log('Görevler oluşturuldu.');
+
+  // 3. Atamaları yap
   await prisma.assignment.create({
     data: {
-      userId: user1.id,
+      userId: adminUser.id,
       taskId: task1.id,
     },
   });
 
   await prisma.assignment.create({
     data: {
-      userId: user2.id,
+      userId: memberUser.id,
       taskId: task2.id,
     },
   });
 
-  console.log('Seed verisi eklendi!');
+   await prisma.assignment.create({
+    data: {
+      userId: memberUser.id,
+      taskId: task3.id,
+    },
+  });
+
+  console.log('Atamalar yapıldı.');
+  console.log('Seed verisi başarıyla eklendi! 🎉');
 }
 
 main()
-  .catch((e) => console.error(e))
+  .catch((e) => {
+    console.error('Seed script çalışırken bir hata oluştu:');
+    console.error(e);
+    process.exit(1);
+  })
   .finally(async () => {
+    // Script bittiğinde veritabanı bağlantısını kapat
     await prisma.$disconnect();
   });
