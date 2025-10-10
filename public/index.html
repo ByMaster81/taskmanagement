@@ -1,101 +1,128 @@
+    
 <!DOCTYPE html>
 <html lang="tr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeamTask API Vitrini</title>
+    <title>TeamTask Projesi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        
-        .site-title {
-            font-size: 48px; 
-            font-weight: bold; 
-            text-align: center; 
-}
-
-        body {  padding-bottom: 5rem;
-                font-size: 14px;
-                padding-bottom: 5rem; 
-            }
-        .grid {
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-        
-
-        article { padding: 1.5rem; }
-        hgroup { margin-bottom: 1rem; }
-        small { color: var(--secondary); }
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem;
-        }
-        ul li:nth-child(odd) {
-            background-color: var(--card-background-color);
-        }
+        body { padding-top: 2rem; padding-bottom: 2rem; }
+        main { max-width: 960px; }
+        .hidden { display: none; }
+        .error { color: var(--pico-color-red-500); margin-top: 0.5rem; }
+        header { display: flex; justify-content: space-between; align-items: center; }
+        ul li { background-color: var(--card-background-color); padding: 1rem; border-radius: var(--border-radius); margin-bottom: 0.75rem;}
+        form { display: flex; flex-direction: column; gap: 1rem; }
     </style>
 </head>
 <body>
     <main class="container">
-        
-        <h class="site-title">TeamTask API Vitrini</h>
-        
 
-        <!--KULLANICILAR-->
-        <article>
-            <hgroup>
-                <h2>Kullanıcılar</h2>
-                
-            </hgroup>
-            <form id="user-form">
-                <div class="grid">
-                    <input type="text" name="name" placeholder="İsim ve Soyisim" required>
-                    <input type="email" name="email" placeholder="E-posta Adresi" required>
-                </div>
-                <button type="submit">Kullanıcı Ekle</button>
+        <!-- 1. KİMLİK DOĞRULAMA EKRANI (GİRİŞ & KAYIT) -->
+        <article id="auth-view">
+            <!-- Giriş Formu -->
+            <form id="login-form">
+                <hgroup>
+                    <h2>Giriş Yap</h2>
+                    <p>Devam etmek için giriş yapın.</p>
+                </hgroup>
+                <input type="email" name="email" placeholder="E-posta Adresi" required>
+                <input type="password" name="password" placeholder="Şifre" required>
+                <p id="login-error" class="error hidden"></p>
+                <button type="submit">Giriş Yap</button>
+                <small>Hesabınız yok mu? <a href="#" id="show-register-link">Kayıt Olun</a></small>
             </form>
-            <hr>
-            <h3>Mevcut Kullanıcılar</h3>
-            <ul id="user-list"></ul>
+            
+            <!-- Kayıt Formu (Başlangıçta gizli) -->
+            <form id="register-form" class="hidden">
+                <hgroup>
+                    <h2>Kayıt Ol</h2>
+                    <p>Yeni bir hesap oluşturun.</p>
+                </hgroup>
+                <input type="text" name="name" placeholder="İsim Soyisim" required>
+                <input type="email" name="email" placeholder="E-posta Adresi" required>
+                <input type="password" name="password" placeholder="Şifre" required>
+                <p id="register-error" class="error hidden"></p>
+                <button type="submit">Kayıt Ol</button>
+                <small>Zaten bir hesabınız var mı? <a href="#" id="show-login-link">Giriş Yapın</a></small>
+            </form>
         </article>
 
-        <!-- GÖREVLER -->
-        <article>
-            <hgroup>
-                <h2>Görevler</h2>
-                
-            </hgroup>
-            <form id="task-form">
-                <input type="text" name="title" placeholder="Görev Başlığı" required>
-                <textarea name="description" placeholder="Görev Açıklaması (Opsiyonel)" rows="3"></textarea>
-                <button type="submit">Görev Ekle</button>
-            </form>
-            <hr>
-            <h3>Mevcut Görevler</h3>
-            <ul id="task-list"></ul>
-        </article>
+        <!-- 2. ADMİN PANOSU EKRANI -->
+        <article id="admin-dashboard-view" class="hidden">
+            <header>
+                <hgroup>
+                    <h2>Admin Panosu</h2>
+                    <p>Kullanıcıları ve görevleri yönetin.</p>
+                </hgroup>
+                <button id="admin-logout-btn" class="secondary outline">Çıkış Yap</button>
+            </header>
 
-        <!-- ATAMALAR BÖLÜMÜ -->
-        <article>
-            <hgroup>
-                <h2>Görev Atamaları</h2>
-            </hgroup>
-            <form id="assignment-form">
-                <div class="grid">
-                    <select id="user-select" name="userId" required>
-                        <option value="" disabled selected>Önce Kullanıcı Seçin...</option>
-                    </select>
-                    <select id="task-select" name="taskId" required>
-                        <option value="" disabled selected>Sonra Görev Seçin...</option>
-                    </select>
-                </div>
-                <button type="submit">Görevi Ata</button>
-            </form>
+            <h3>Yönetim Araçları</h3>
+            <div class="grid">
+                <section>
+                    <h4>Yeni Kullanıcı Oluştur</h4>
+                    <form id="create-user-form">
+                        <input type="text" name="name" placeholder="İsim Soyisim" required>
+                        <input type="email" name="email" placeholder="E-posta Adresi" required>
+                        <input type="password" name="password" placeholder="Geçici Şifre" required>
+                        <label for="role-select">Rol Seç</label>
+                        <select id="role-select" name="role">
+                            <option value="USER">Standart Kullanıcı (USER)</option>
+                            <option value="ADMINUSER">Admin (ADMINUSER)</option>
+                        </select>
+                        <button type="submit">Kullanıcıyı Oluştur</button>
+                    </form>
+                    <hr>
+                    <h4>Yeni Görev Oluştur</h4>
+                    <form id="create-task-form">
+                        <input type="text" name="title" placeholder="Görev Başlığı" required>
+                        <textarea name="description" placeholder="Görev Açıklaması"></textarea>
+                        <button type="submit">Görevi Oluştur</button>
+                    </form>
+                </section>
+                <section>
+                    <h4>Görev Ata</h4>
+                    <form id="assign-task-form">
+                        <label for="user-select">Kullanıcı Seç</label>
+                        <select id="user-select" name="userId" required>
+                            <option value="">Yükleniyor...</option>
+                        </select>
+                        <label for="task-select">Görev Seç</label>
+                        <select id="task-select" name="taskId" required>
+                            <option value="">Yükleniyor...</option>
+                        </select>
+                        <button type="submit">Görevi Ata</button>
+                    </form>
+                </section>
+            </div>
+            
             <hr>
-            <h3>Mevcut Atamalar</h3>
-            <ul id="assignment-list"></ul>
+
+            <h3>Veri Listeleri</h3>
+            <div class="grid">
+                <section>
+                    <h4>Tüm Kullanıcılar</h4>
+                    <ul id="admin-user-list"></ul>
+                </section>
+                <section>
+                    <h4>Tüm Atamalar</h4>
+                    <ul id="admin-assignment-list"></ul>
+                </section>
+            </div>
+        </article> <!-- <<< ADMİN PANOSU BURADA BİTİYOR -->
+
+        <!-- 3. KULLANICI PANOSU EKRANI (Artık doğru yerde) -->
+        <article id="user-dashboard-view" class="hidden">
+            <header>
+                <hgroup>
+                    <h2>Görevlerim</h2>
+                    <p>Size atanmış olan tüm görevler listeleniyor.</p>
+                </hgroup>
+                <button id="user-logout-btn" class="secondary outline">Çıkış Yap</button>
+            </header>
+            <ul id="user-task-list"></ul>
         </article>
 
     </main>
@@ -103,3 +130,5 @@
     <script src="app.js"></script>
 </body>
 </html>
+
+  

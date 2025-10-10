@@ -1,66 +1,89 @@
 // prisma/seed.js
 
-// PrismaClient ve enum'ları @prisma/client'tan import ediyoruz
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Role, TaskStatus } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Önceki veriler siliniyor...');
-  // Her çalıştırmada tutarlı bir başlangıç için eski verileri temizliyoruz.
+  
+  
   await prisma.assignment.deleteMany();
   await prisma.task.deleteMany();
   await prisma.user.deleteMany();
-  console.log('Önceki veriler silindi.');
+  console.log('✅ Veritabanı temizlendi.');
 
-  console.log('Seed verisi ekleniyor...');
+  
 
-  // 1. Kullanıcıları rollerine ve düz metin şifrelerine göre oluştur
+
+  const adminPassword = await bcrypt.hash('admin123', 10);
+  const userPassword = await bcrypt.hash('isinsu123', 10);
+
   const adminUser = await prisma.user.create({
     data: {
-      name: 'Ahmet (Admin)',
-      email: 'ahmet@example.com',
-      password: 'ahmet1234_düz_metin', // Şifre doğrudan yazılıyor
-      role: Role.ADMINUSER,            // Rol enum kullanılarak atanıyor
+      name: 'Admin Ali',
+      email: 'admin@example.com',
+      password: adminPassword,
+      role: Role.ADMINUSER, 
     },
   });
 
   const memberUser = await prisma.user.create({
     data: {
-      name: 'Ayşe (Member)',
-      email: 'ayse@example.com',
-      password: 'ayse1234_düz_metin',  // Şifre doğrudan yazılıyor
-      role: Role.USER,                 // Varsayılan rolü de belirtebiliriz
+      name: 'Işınsu Yakışıklı',
+      email: 'isinsu.yakisikli@std.yeditepe.edu.tr',
+      password: userPassword,
+      role: Role.USER, 
     },
   });
+  const memberUser2 = await prisma.user.create({
+    data: {
+      name: 'Kullanıcı Veli',
+      email: 'user2@example.com',
+      password: userPassword,
+      role: Role.USER, 
+    },
+  });
+  console.log('👤 Kullanıcılar oluşturuldu.');
+  console.log(`   -> Admin: admin@example.com / admin123`);
+  console.log(`   -> User:  user@example.com / user123`);
 
-  console.log('Kullanıcılar oluşturuldu.');
 
-  // 2. Görevleri oluştur
   const task1 = await prisma.task.create({
     data: {
-      title: 'Frontend geliştirme',
-      description: 'Login sayfası tasarlanacak',
+      title: 'Kullanıcı Arayüzünü Tasarla',
+      description: 'Ana sayfa için modern bir arayüz tasarlanacak.',
+      status: TaskStatus.PENDING,
     },
   });
 
   const task2 = await prisma.task.create({
     data: {
-      title: 'Backend API',
-      description: 'Users endpoint tamamlanacak',
+      title: 'API Yetkilendirmesini Tamamla',
+      description: 'Tüm endpointler için rol bazlı yetkilendirme eklenecek.',
+      status: TaskStatus.IN_PROGRESS,
     },
   });
 
   const task3 = await prisma.task.create({
     data: {
-      title: 'Veritabanı optimizasyonu',
-      description: 'Sorgu performansları incelenecek',
+      title: 'Veritabanı Seed Scriptini Yaz',
+      description: 'Geliştirme ortamı için test verileri oluşturulacak.',
+      status: TaskStatus.DONE,
     },
   });
 
-  console.log('Görevler oluşturuldu.');
+  const task4 = await prisma.task.create({
+    data: {
+      title: 'Docker Kurulumunu Yapılandır',
+      description: 'Proje için Dockerfile ve docker-compose dosyaları hazırlanacak.',
+      status: TaskStatus.PENDING,
+    },
+  });
 
-  // 3. Atamaları yap
+  console.log('📋 Görevler oluşturuldu.');
+
+
   await prisma.assignment.create({
     data: {
       userId: adminUser.id,
@@ -70,29 +93,36 @@ async function main() {
 
   await prisma.assignment.create({
     data: {
+      userId: adminUser.id,
+      taskId: task4.id,
+    },
+  });
+
+  // Kullanıcı Veli'ye iki görev atayalım
+  await prisma.assignment.create({
+    data: {
       userId: memberUser.id,
       taskId: task2.id,
     },
   });
 
-   await prisma.assignment.create({
+  await prisma.assignment.create({
     data: {
       userId: memberUser.id,
       taskId: task3.id,
     },
   });
 
-  console.log('Atamalar yapıldı.');
-  console.log('Seed verisi başarıyla eklendi! 🎉');
+  console.log('🔗 Atamalar yapıldı.');
+  console.log('🎉 Seed verisi başarıyla eklendi!');
 }
 
 main()
   .catch((e) => {
-    console.error('Seed script çalışırken bir hata oluştu:');
+    console.error('❌ Seed script çalışırken bir hata oluştu:');
     console.error(e);
     process.exit(1);
   })
   .finally(async () => {
-    // Script bittiğinde veritabanı bağlantısını kapat
     await prisma.$disconnect();
   });
