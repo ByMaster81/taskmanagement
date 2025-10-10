@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-// Bu bizim "güvenlik görevlimiz"
+
 export const protect = async (req, res, next) => {
     let token;
 
@@ -41,17 +41,13 @@ export const protect = async (req, res, next) => {
 
 export const authorize = (...roles) => {
     return (req, res, next) => {
-        // 'protect' middleware'ı daha önce çalıştığı için req.user objemiz var
         
         // Eğer kullanıcının rolü, izin verilen roller listesinde DEĞİLSE...
         if (!roles.includes(req.user.role)) {
-            // 403 Forbidden (Yasak) hatası döndür
             return res.status(403).json({ 
                 error: `Bu işlemi yapmak için yetkiniz yok. Gerekli rol: ${roles.join(' veya ')}` 
             });
         }
-        
-        // Eğer kullanıcının rolü uygunsa, isteğin devam etmesine izin ver
         next();
     };
 };

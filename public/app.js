@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminAssignmentList = document.getElementById('admin-assignment-list');
     const createUserForm = document.getElementById('create-user-form');
 
-    // --- YARDIMCI FONKSİYONLAR ---
+    
 
     // Hangi görünümün aktif olacağını yönetir
     const showView = (viewId) => {
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchAllTasksForAdmin();
         fetchAllAssignmentsForAdmin();
     };
-    // Giriş yapmış kullanıcıya göre doğru panoyu gösterir
+    // Giriş yapmış kullanıcıya göre
     const navigateToDashboard = () => {
         if (!authToken) return showView('auth-view');
         const user = decodeToken(authToken);
@@ -155,7 +155,6 @@ const fetchAllUsersForAdmin = async () => {
 
     // --- OLAY DİNLEYİCİLERİ (EVENT LISTENERS) ---
 
-    // Giriş formu gönderildiğinde
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         loginError.classList.add('hidden');
@@ -197,7 +196,6 @@ const fetchAllUsersForAdmin = async () => {
         if (response.ok) {
             alert(`Kullanıcı "${result.name}" başarıyla oluşturuldu!`);
             createUserForm.reset();
-            // En önemlisi: Kullanıcı listesini tazeleyerek yeni kullanıcıyı göster
             fetchAllUsersForAdmin(); 
         } else {
             alert(`Hata: ${result.error || 'Kullanıcı oluşturulamadı.'}`);
@@ -241,8 +239,7 @@ const fetchAllUsersForAdmin = async () => {
                 if (response.ok) {
                     const result = await response.json();
                     alert(`Kullanıcı "${result.user.name}" başarıyla silindi.`);
-                    // Listeyi ve atama formundaki kullanıcıları tazeleyerek
-                    // silinen kullanıcıyı arayüzden kaldırıyoruz.
+                    
                     fetchAllUsersForAdmin(); 
                 } else {
                     const result = await response.json();
@@ -307,12 +304,12 @@ const fetchAllUsersForAdmin = async () => {
         if (response.ok) {
             alert('Görev başarıyla atandı!');
             assignTaskForm.reset();
-            fetchAllAssignmentsForAdmin(); // Atama listesini güncelle
+            fetchAllAssignmentsForAdmin(); 
         } else {
             alert('Görev atanamadı.');
         }
     });
 
-    // --- UYGULAMA BAŞLANGICI ---
+    
     navigateToDashboard();
 });

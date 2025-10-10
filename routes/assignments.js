@@ -8,8 +8,7 @@ const prisma = new PrismaClient();
 
 router.get('/me', protect, async (req, res) => {
     try {
-        // 'protect' middleware'ı başarılı olduğunda, req.user objesini oluşturur.
-        // Bu objeden giriş yapmış kullanıcının ID'sini alıyoruz.
+        
         const userId = req.user.id;
 
         const assignments = await prisma.assignment.findMany({
