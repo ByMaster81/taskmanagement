@@ -80,3 +80,17 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
 | `/assignments/:id`        | `DELETE` | Bir görev atamasını kaldırır.             | **Admin**          |
 | `/assignments/me`         | `GET`  | Giriş yapmış kullanıcının kendi görevlerini listeler. | **Giriş Yapmış Kullanıcı** |
 
+## 🖼️ Uygulama Görüntüleri
+
+<table>
+  <tr>
+    <td align="center"><strong>Giriş & Kayıt Ekranı</strong></td>
+    <td align="center"><strong>Admin Yönetim Panosu</strong></td>
+    <td align="center"><strong>Kullanıcı Panosu</strong></td>
+  </tr>
+  <tr>
+    <td><img src="./screenshots/Giris.png" alt="Giriş Ekranı"></td>
+    <td><img src="./screenshots/adminPano.png" alt="Admin Panosu"></td>
+    <td><img src="./screenshots/admin-yeniUser" alt="User Ekleme"></td>
+  </tr>
+</table>
