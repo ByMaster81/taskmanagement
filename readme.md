@@ -81,10 +81,6 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
 | `/assignments/me`         | `GET`  | Giriş yapmış kullanıcının kendi görevlerini listeler. | **Giriş Yapmış Kullanıcı** |
 
 ## 🖼️ Uygulama Görüntüleri
-
-## 🖼️ Uygulama Görüntüleri
-
-<table>
   <tr>
     <td align="center"><strong>Giriş & Kayıt</strong></td>
     <td align="center"><strong>Admin Panosu</strong></td>
@@ -101,4 +97,3 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
     <td><img src="./screenshots/admin-yeniAssignment.png" alt="Assignment Ekleme" width="250"></td>
     <td><img src="./screenshots/admin-veriTablolari.png" alt="Veri Tabloları" width="250"></td>
   </tr>
-</table>
