@@ -69,37 +69,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 const fetchAllUsersForAdmin = async () => {
-        adminUserList.innerHTML = '<li>Yükleniyor...</li>';
-        userSelect.innerHTML = '<option>Yükleniyor...</option>';
-        const response = await fetch(`${API_URL}/users`, { headers: { 'Authorization': `Bearer ${authToken}` } });
-        if (response.ok) {
-            const users = await response.json();
-            adminUserList.innerHTML = '';
-            userSelect.innerHTML = '<option value="">Kullanıcı Seçin</option>';
-            users.forEach(user => {
-                // Atama select kutusuna ekleme
-                const option = document.createElement('option');
-                option.value = user.id;
-                option.textContent = `${user.name} (${user.role})`;
-                userSelect.appendChild(option);
+    adminUserList.innerHTML = '<tr><td colspan="3">Yükleniyor...</td></tr>';
+    const response = await fetch(`${API_URL}/users`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+    if (response.ok) {
+        const users = await response.json();
+        adminUserList.innerHTML = '';
+        userSelect.innerHTML = '<option value="">Kullanıcı Seçin</option>';
+        
+        users.forEach(user => {
+            // Atama select kutusuna ekleme
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.name} (${user.role})`;
+            userSelect.appendChild(option);
 
-                // Görünen listeye ekleme
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>İsim: ${user.name}, Rol: ${user.role}</span>
+            // Görünen tabloya satır (tr) olarak ekleme
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.role}</td>
+                <td>
                     <button class="secondary outline contrast delete-user-btn" data-id="${user.id}" data-name="${user.name}">
                       Sil
                     </button>
-                `;
-                li.style.display = 'flex';
-                li.style.justifyContent = 'space-between';
-                li.style.alignItems = 'center';
-                adminUserList.appendChild(li);
-            });
-        }
-    };
+                </td>
+            `;
+            adminUserList.appendChild(tr);
+        });
+    }
+};
     
-    // Admin için: Görevleri select kutusuna doldurur
+    
     const fetchAllTasksForAdmin = async () => {
         taskSelect.innerHTML = '<option>Yükleniyor...</option>';
         const response = await fetch(`${API_URL}/tasks`, { headers: { 'Authorization': `Bearer ${authToken}` } });
@@ -115,22 +115,43 @@ const fetchAllUsersForAdmin = async () => {
         }
     };
 
-    // Admin için: Tüm atamaları listeler
+    
     const fetchAllAssignmentsForAdmin = async () => {
-        adminAssignmentList.innerHTML = '<li>Yükleniyor...</li>';
+        adminAssignmentList.innerHTML = '<tr><td colspan="4">Yükleniyor...</td></tr>';
         const response = await fetch(`${API_URL}/assignments`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+        
         if (response.ok) {
             const assignments = await response.json();
             adminAssignmentList.innerHTML = '';
+            
             assignments.forEach(assignment => {
-                const li = document.createElement('li');
-                li.textContent = `Görev: "${assignment.task.title}" => Kullanıcı: ${assignment.user.name}`;
-                adminAssignmentList.appendChild(li);
+                const tr = document.createElement('tr');
+                const currentStatus = assignment.task.status;
+                const taskId = assignment.task.id;
+
+                const statusOptions = ['PENDING', 'IN_PROGRESS', 'DONE']
+                    .map(status => `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>${status}</option>`)
+                    .join('');
+
+                tr.innerHTML = `
+                    <td>${assignment.task.title}</td>
+                    <td>${assignment.user.name}</td>
+                    <td>
+                        <select class="status-select" data-task-id="${taskId}">
+                            ${statusOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="secondary outline contrast remove-assignment-btn" data-id="${assignment.id}">
+                        Kaldır
+                        </button>
+                    </td>
+                `;
+                adminAssignmentList.appendChild(tr);
             });
         }
     };
     
-    // Normal kullanıcı için: Kendi görevlerini çeker
     const fetchMyTasks = async () => {
         userTaskList.innerHTML = '<li>Görevler yükleniyor...</li>';
         const response = await fetch(`${API_URL}/assignments/me`, {
@@ -152,6 +173,7 @@ const fetchAllUsersForAdmin = async () => {
             userTaskList.innerHTML = '<li>Görevler yüklenemedi.</li>';
         }
     };
+    
 
     // --- OLAY DİNLEYİCİLERİ (EVENT LISTENERS) ---
 
@@ -225,6 +247,36 @@ const fetchAllUsersForAdmin = async () => {
             registerError.classList.remove('hidden');
         }
     });
+
+    adminAssignmentList.addEventListener('change', (e) => {
+        // Olayın bir durum select menüsünden gelip gelmediğini kontrol et
+        if (e.target.matches('.status-select')) {
+            const taskId = e.target.dataset.taskId;
+            const newStatus = e.target.value;
+            updateTaskStatus(taskId, newStatus);
+        }
+    });
+    adminAssignmentList.addEventListener('click', async (e) => {
+        // Tıklanan elementin bir "atamayı kaldır" butonu olup olmadığını kontrol et
+        if (e.target.matches('.remove-assignment-btn')) {
+            const assignmentId = e.target.dataset.id;
+            
+            if (confirm('Bu görev atamasını kaldırmak istediğinizden emin misiniz? (Görevin kendisi silinmeyecektir)')) {
+                const response = await fetch(`${API_URL}/assignments/${assignmentId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    alert('Atama başarıyla kaldırıldı.');
+                    fetchAllAssignmentsForAdmin(); 
+                } else {
+                    const result = await response.json();
+                    alert(`Hata: ${result.error || 'Atama kaldırılamadı.'}`);
+                }
+            }
+        }
+    });
     adminUserList.addEventListener('click', async (e) => {
         if (e.target.matches('.delete-user-btn')) {
             const userId = e.target.dataset.id;
@@ -248,6 +300,7 @@ const fetchAllUsersForAdmin = async () => {
             }
         }
     });
+
     // Çıkış yapma
     const handleLogout = () => {
         authToken = null;
@@ -283,7 +336,7 @@ const fetchAllUsersForAdmin = async () => {
         if (response.ok) {
             alert('Görev başarıyla oluşturuldu!');
             createTaskForm.reset();
-            fetchAllTasksForAdmin(); // Atama select kutusunu güncelle
+            fetchAllTasksForAdmin(); 
         } else {
             alert('Görev oluşturulamadı.');
         }
@@ -310,6 +363,23 @@ const fetchAllUsersForAdmin = async () => {
         }
     });
 
-    
+    const updateTaskStatus = async (taskId, newStatus) => {
+        const response = await fetch(`${API_URL}/tasks/${taskId}/status`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (response.ok) {
+            alert('Görev durumu başarıyla güncellendi!');
+            //Listeyi yeniden yükleyerek tutarlılık garanti edilebilir(?)
+            // fetchAllAssignmentsForAdmin(); 
+        } else {
+            alert('Durum güncellenemedi.');
+        }
+    };
     navigateToDashboard();
 });

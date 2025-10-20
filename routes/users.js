@@ -56,10 +56,9 @@ router.post('/', protect, validateUserName, validateEmail, authorize('ADMINUSER'
         name, 
         email, 
         password: hashedPassword,
-        //varsayılan olarak 'USER' ata.
         role: role || 'USER' 
       },
-      select: { // Yanıtta ASLA şifreyi gönderme
+      select: { 
         id: true,
         name: true,
         email: true,
@@ -102,7 +101,7 @@ router.delete('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     // (Assignment kayıtlarını) otomatik olarak silecektir.
     const deletedUser = await prisma.user.delete({
       where: { id },
-      select: { name: true, email: true } // Dönen yanıtta şifre olmasın
+      select: { name: true, email: true }
     });
 
     res.json({ message: 'Kullanıcı başarıyla silindi', user: deletedUser });

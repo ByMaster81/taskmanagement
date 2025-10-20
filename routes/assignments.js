@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { protect } from '../middlewares/authMiddleware.js'; 
+import { protect, authorize } from '../middlewares/authMiddleware.js'; 
 const router = Router();
 const prisma = new PrismaClient();
 
@@ -56,7 +56,7 @@ router.post('/', async(req,res) => {
 });
 
 //Update
-router.put('/:id', async(req,res) => {
+router.put('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     try{
       const {id} = req.params;
       const {userId, taskId} = req.body;
@@ -68,7 +68,7 @@ router.put('/:id', async(req,res) => {
 });
 
 //Delete
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     try{
       const{id} = req.params;
       await prisma.assignment.delete({where: {id}});
