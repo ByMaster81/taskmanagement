@@ -86,7 +86,10 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
   <tr>
     <td align="center"><strong>Giriş & Kayıt Ekranı</strong></td>
     <td align="center"><strong>Admin Yönetim Panosu</strong></td>
-    <td align="center"><strong>Kullanıcı Panosu</strong></td>
+    <td align="center"><strong>User Ekleme</strong></td>
+    <td align="center"><strong>Task Ekleme</strong></td>
+    <td align="center"><strong>Assignment Ekleme</strong></td>
+    <td align="center"><strong>Veri Tabloları</strong></td>
   </tr>
   <tr>
     <td><img src="./screenshots/Giris.png" alt="Giriş Ekranı"></td>
