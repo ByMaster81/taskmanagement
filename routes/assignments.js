@@ -13,11 +13,9 @@ router.get('/me', protect, async (req, res) => {
 
         const assignments = await prisma.assignment.findMany({
             where: {
-                // Sadece bu kullanıcıya ait atamaları bul
                 userId: userId, 
             },
             include: {
-                // Atamayla birlikte görev detaylarını da getir
                 task: true, 
             }
         });
