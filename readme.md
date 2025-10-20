@@ -81,19 +81,35 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
 | `/assignments/me`         | `GET`  | Giriş yapmış kullanıcının kendi görevlerini listeler. | **Giriş Yapmış Kullanıcı** |
 
 ## 🖼️ Uygulama Görüntüleri
-  <tr>
-    <td align="center"><strong>Giriş & Kayıt</strong></td>
-    <td align="center"><strong>Admin Panosu</strong></td>
-    <td align="center"><strong>User Ekleme</strong></td>
-    <td align="center"><strong>Task Ekleme</strong></td>
-    <td align="center"><strong>Assignment Ekleme</strong></td>
-    <td align="center"><strong>Veri Tabloları</strong></td>
-  </tr>
-  <tr>
-    <td><img src="./screenshots/Giris.png" alt="Giriş Ekramı" width="250"></td>
-    <td><img src="./screenshots/adminPano.png" alt="Admin Panosu" width="250"></td>
-    <td><img src="./screenshots/admin-yeniUser.png" alt="User Ekleme" width="250"></td>
-    <td><img src="./screenshots/admin-yeniTask.png" alt="Task Ekleme" width="250"></td>
-    <td><img src="./screenshots/admin-yeniAssignment.png" alt="Assignment Ekleme" width="250"></td>
-    <td><img src="./screenshots/admin-veriTablolari.png" alt="Veri Tabloları" width="250"></td>
-  </tr>
+
+Aşağıda uygulamanın temel ekranlarına ait görseller yer almaktadır.
+
+---
+
+### 1. Giriş & Kayıt Ekranı
+*Kullanıcıların sisteme giriş yaptığı veya yeni hesap oluşturduğu ilk ekran.*
+
+![Giriş Ekranı](./screenshots/Giris.png)
+
+---
+
+### 2. Admin Yönetim Panosu
+*Admin olarak giriş yapıldığında karşılaşılan, tüm yönetim araçlarını ve veri tablolarını barındıran ana kontrol paneli.*
+
+![Admin Panosu](./screenshots/adminPano.png)
+
+---
+
+### 3. Yönetim Araçları (User, Task, Assignment Ekleme)
+*Admin panosundaki açılır menüler aracılığıyla yeni kullanıcı, görev ve atama oluşturma formları.*
+
+![User Ekleme](./screenshots/admin-yeniUser.png)
+![Task Ekleme](./screenshots/admin-yeniTask.png)
+![Assignment Ekleme](./screenshots/admin-yeniAssignment.png)
+
+---
+
+### 4. Veri Tabloları
+*Admin panosunda, sistemdeki tüm kullanıcıların ve görev atamalarının listelendiği, yönetilebildiği tablolar.*
+
+![Veri Tabloları](./screenshots/admin-veriTablolari.png)
