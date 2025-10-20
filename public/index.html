@@ -54,88 +54,87 @@
 
         <!-- GÖRÜNÜM 2: ADMİN PANOSU -->
         <article id="admin-dashboard-view" class="hidden">
-            <header>
-                <hgroup>
-                    <h2>Admin Panosu</h2>
-                    <p>Kullanıcıları ve görevleri yönetin.</p>
-                </hgroup>
-                <button id="admin-logout-btn" class="secondary outline">Çıkış Yap</button>
-            </header>
+        <header>
+            <hgroup>
+                <h2>Admin Panosu</h2>
+                <p>Yönetim araçlarını ve veri listelerini açmak için başlıklara tıklayın.</p>
+            </hgroup>
+            <button id="admin-logout-btn" class="secondary outline">Çıkış Yap</button>
+        </header>
 
-            <h3>Yönetim Araçları</h3>
-            <div class="grid">
-                <section>
-                    <h4>Yeni Kullanıcı Oluştur</h4>
-                    <form id="create-user-form">
-                        <input type="text" name="name" placeholder="İsim Soyisim" required>
-                        <input type="email" name="email" placeholder="E-posta Adresi" required>
-                        <input type="password" name="password" placeholder="Geçici Şifre" required>
-                        <label for="role-select">Rol Seç</label>
-                        <select id="role-select" name="role">
-                            <option value="USER">Standart Kullanıcı (USER)</option>
-                            <option value="ADMINUSER">Admin (ADMINUSER)</option>
-                        </select>
-                        <button type="submit">Kullanıcıyı Oluştur</button>
-                    </form>
-                    <hr>
-                    <h4>Yeni Görev Oluştur</h4>
-                    <form id="create-task-form">
-                        <input type="text" name="title" placeholder="Görev Başlığı" required>
-                        <textarea name="description" placeholder="Görev Açıklaması"></textarea>
-                        <button type="submit">Görevi Oluştur</button>
-                    </form>
-                </section>
-                <section>
-                    <h4>Görev Ata</h4>
-                    <form id="assign-task-form">
-                        <label for="user-select">Kullanıcı Seç</label>
-                        <select id="user-select" name="userId" required>
-                            <option value="">Yükleniyor...</option>
-                        </select>
-                        <label for="task-select">Görev Seç</label>
-                        <select id="task-select" name="taskId" required>
-                            <option value="">Yükleniyor...</option>
-                        </select>
-                        <button type="submit">Görevi Ata</button>
-                    </form>
-                </section>
-            </div>
-            
-            <hr>
+        <!-- 1. BÖLÜM: YÖNETİM FORMLARI -->
+        <h3>Yönetim Araçları</h3>
+        
+        <!-- Yeni Kullanıcı Oluşturma (Açılır-Kapanır) -->
+        <details>
+            <summary role="button" class="secondary">Yeni Kullanıcı Oluştur</summary>
+            <form id="create-user-form">
+                <input type="text" name="name" placeholder="İsim Soyisim" required>
+                <input type="email" name="email" placeholder="E-posta Adresi" required>
+                <input type="password" name="password" placeholder="Geçici Şifre" required>
+                <label for="role-select">Rol Seç</label>
+                <select id="role-select" name="role">
+                    <option value="USER">Standart Kullanıcı (USER)</option>
+                    <option value="ADMINUSER">Admin (ADMINUSER)</option>
+                </select>
+                <button type="submit">Kullanıcıyı Oluştur</button>
+            </form>
+        </details>
 
-            <h3>Veri Listeleri</h3>
-            <article>
-                <h4>Tüm Kullanıcılar</h4>
-                <figure>
-                    <table role="grid" id="admin-user-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">İsim</th>
-                                <th scope="col">Rol</th>
-                                <th scope="col" style="width: 15%;">İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-user-list"></tbody>
-                    </table>
-                </figure>
-            </article>
-            <article>
-                <h4>Tüm Atamalar</h4>
-                <figure>
-                    <table role="grid" id="admin-assignment-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Görev</th>
-                                <th scope="col">Atanan Kullanıcı</th>
-                                <th scope="col" style="width: 20%;">Durum</th>
-                                <th scope="col" style="width: 15%;">İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-assignment-list"></tbody>
-                    </table>
-                </figure>
-            </article>
-        </article>
+        <!-- Yeni Görev Oluşturma (Açılır-Kapanır) -->
+        <details>
+            <summary role="button" class="secondary">Yeni Görev Oluştur</summary>
+            <form id="create-task-form">
+                <input type="text" name="title" placeholder="Görev Başlığı" required>
+                <textarea name="description" placeholder="Görev Açıklaması"></textarea>
+                <button type="submit">Görevi Oluştur</button>
+            </form>
+        </details>
+
+        <!-- Görev Atama (Açılır-Kapanır) -->
+        <details>
+            <summary role="button" class="secondary">Görev Ata</summary>
+            <form id="assign-task-form">
+                <label for="user-select">Kullanıcı Seç</label>
+                <select id="user-select" name="userId" required>
+                    <option value="">Yükleniyor...</option>
+                </select>
+                <label for="task-select">Görev Seç</label>
+                <select id="task-select" name="taskId" required>
+                    <option value="">Yükleniyor...</option>
+                </select>
+                <button type="submit">Görevi Ata</button>
+            </form>
+        </details>
+
+        <hr>
+
+        <!-- 2. BÖLÜM: VERİ LİSTELERİ -->
+        <h3>Veri Listeleri</h3>
+
+        <!-- Tüm Kullanıcılar (Açılır-Kapanır) -->
+        <details open> <!-- 'open' attribute'ü başlangıçta açık gelmesini sağlar -->
+            <summary role="button">Tüm Kullanıcılar</summary>
+            <figure>
+                <table role="grid" id="admin-user-table">
+                    <!-- ... tablo başlıkları aynı ... -->
+                    <tbody id="admin-user-list"></tbody>
+                </table>
+            </figure>
+        </details>
+        
+        <!-- Tüm Atamalar (Açılır-Kapanır) -->
+        <details open>
+            <summary role="button">Tüm Atamalar</summary>
+            <figure>
+                <table role="grid" id="admin-assignment-table">
+                    <!-- ... tablo başlıkları aynı ... -->
+                    <tbody id="admin-assignment-list"></tbody>
+                </table>
+            </figure>
+        </details>
+
+    </article> <!-- Admin Panosu Bitişi -->
 
         
         <article id="user-dashboard-view" class="hidden">
