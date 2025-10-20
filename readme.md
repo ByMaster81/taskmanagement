@@ -92,5 +92,9 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
     <td><img src="./screenshots/Giris.png" alt="Giriş Ekranı"></td>
     <td><img src="./screenshots/adminPano.png" alt="Admin Panosu"></td>
     <td><img src="./screenshots/admin-yeniUser.png" alt="User Ekleme"></td>
+    <td><img src="./screenshots/admin-yeniTask.png" alt="Task Ekleme"></td>
+    <td><img src="./screenshots/admin-yeniAssignment.png" alt="Assignment Ekleme"></td>
+    <td><img src="./screenshots/admin-veriTablolari.png" alt="Veri Tabloları"></td>
+
   </tr>
 </table>
