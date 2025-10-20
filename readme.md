@@ -82,26 +82,23 @@ Tüm korumalı rotalar `Authorization: Bearer <TOKEN>` başlığı gerektirir.
 
 ## 🖼️ Uygulama Görüntüleri
 
+## 🖼️ Uygulama Görüntüleri
 
 <table>
   <tr>
-    <td align="center"><strong>Giriş & Kayıt Ekranı</strong></td>
-    <td align="center"><strong>Admin Yönetim Panosu</strong></td>
+    <td align="center"><strong>Giriş & Kayıt</strong></td>
+    <td align="center"><strong>Admin Panosu</strong></td>
     <td align="center"><strong>User Ekleme</strong></td>
-  </tr>
-  <tr>
-    <td><img src="./screenshots/Giris.png" alt="Giriş Ekranı" width="400"></td>
-    <td><img src="./screenshots/adminPano.png" alt="Admin Panosu" width="400"></td>
-    <td><img src="./screenshots/admin-yeniUser.png" alt="User Ekleme" width="400"></td>
-  </tr>
-  <tr>
     <td align="center"><strong>Task Ekleme</strong></td>
     <td align="center"><strong>Assignment Ekleme</strong></td>
     <td align="center"><strong>Veri Tabloları</strong></td>
   </tr>
   <tr>
-    <td><img src="./screenshots/admin-yeniTask.png" alt="Task Ekleme" width="400"></td>
-    <td><img src="./screenshots/admin-yeniAssignment.png" alt="Assignment Ekleme" width="400"></td>
-    <td><img src="./screenshots/admin-veriTablolari.png" alt="Veri Tabloları" width="400"></td>
+    <td><img src="./screenshots/Giris.png" alt="Giriş Ekramı" width="250"></td>
+    <td><img src="./screenshots/adminPano.png" alt="Admin Panosu" width="250"></td>
+    <td><img src="./screenshots/admin-yeniUser.png" alt="User Ekleme" width="250"></td>
+    <td><img src="./screenshots/admin-yeniTask.png" alt="Task Ekleme" width="250"></td>
+    <td><img src="./screenshots/admin-yeniAssignment.png" alt="Assignment Ekleme" width="250"></td>
+    <td><img src="./screenshots/admin-veriTablolari.png" alt="Veri Tabloları" width="250"></td>
   </tr>
 </table>
