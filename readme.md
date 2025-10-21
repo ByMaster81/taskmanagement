@@ -29,7 +29,7 @@ Bu projenin en güzel yanlarından biri, Docker sayesinde tek bir komutla tüm s
 
 **Gereksinimler:**
 - [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/) (Genellikle Docker Desktop ile birlikte gelir)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 **Kurulum Adımları:**
 
