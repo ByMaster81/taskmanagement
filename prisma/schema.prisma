@@ -25,6 +25,10 @@ model User {
   password String
   role Role @default(USER)
   tasks Assignment[] 
+
+
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 enum TaskStatus {
@@ -51,4 +55,18 @@ model Assignment {
   taskId  String
   assignedAt DateTime @default(now())
   @@unique([userId, taskId])
+}
+
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  // İlişkiler: Her mesajın bir göndereni ve bir alıcısı vardır.
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
+  senderId  String
+
+  receiver  User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId String
 }
