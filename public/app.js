@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- HTML Element Referansları ---
     const authView = document.getElementById('auth-view');
     const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
+    //const registerForm = document.getElementById('register-form');
     const adminDashboardView = document.getElementById('admin-dashboard-view');
     const userDashboardView = document.getElementById('user-dashboard-view');
     
     const showRegisterLink = document.getElementById('show-register-link');
-    const showLoginLink = document.getElementById('show-login-link');
+    //const showLoginLink = document.getElementById('show-login-link');
     
     const loginError = document.getElementById('login-error');
-    const registerError = document.getElementById('register-error');
+    //const registerError = document.getElementById('register-error');
 
  
     const userTaskList = document.getElementById('user-task-list');
@@ -224,7 +224,7 @@ const fetchAllUsersForAdmin = async () => {
         }
     });
     // Kayıt formu gönderildiğinde
-    registerForm.addEventListener('submit', async (e) => {
+    /*registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         registerError.classList.add('hidden');
         const formData = new FormData(registerForm);
@@ -247,7 +247,7 @@ const fetchAllUsersForAdmin = async () => {
             registerError.classList.remove('hidden');
         }
     });
-
+    */
     adminAssignmentList.addEventListener('change', (e) => {
         // Olayın bir durum select menüsünden gelip gelmediğini kontrol et
         if (e.target.matches('.status-select')) {
@@ -311,7 +311,7 @@ const fetchAllUsersForAdmin = async () => {
     userLogoutBtn.addEventListener('click', handleLogout);
 
     // Form değiştirme linkleri
-    showRegisterLink.addEventListener('click', (e) => {
+    /*showRegisterLink.addEventListener('click', (e) => {
         e.preventDefault();
         loginForm.classList.add('hidden');
         registerForm.classList.remove('hidden');
@@ -322,6 +322,7 @@ const fetchAllUsersForAdmin = async () => {
         registerForm.classList.add('hidden');
         loginForm.classList.remove('hidden');
     });
+    */
     createTaskForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(createTaskForm);
@@ -344,24 +345,32 @@ const fetchAllUsersForAdmin = async () => {
 
     // YENİ: Atama formu gönderildiğinde
     assignTaskForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(assignTaskForm);
-        const data = Object.fromEntries(formData.entries());
+    e.preventDefault();
+    const formData = new FormData(assignTaskForm);
+    const data = Object.fromEntries(formData.entries());
+    console.log(" görev atama isteği gönderiliyor...");
+    console.log("Kullanılan Auth Token:", authToken); 
 
-        const response = await fetch(`${API_URL}/assignments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            alert('Görev başarıyla atandı!');
-            assignTaskForm.reset();
-            fetchAllAssignmentsForAdmin(); 
-        } else {
-            alert('Görev atanamadı.');
-        }
+    const response = await fetch(`${API_URL}/assignments`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${authToken}` 
+        },
+        body: JSON.stringify(data),
     });
+
+    if (response.ok) {
+        alert('Görev başarıyla atandı!');
+        assignTaskForm.reset();
+        fetchAllAssignmentsForAdmin(); 
+    } else {
+        console.error("Görev atama başarısız! Sunucudan gelen cevap:", response.status, response.statusText);
+        const result = await response.json();
+        console.error("Sunucudan gelen hata mesajı:", result);
+        alert('Görev atanamadı. Detaylar için konsolu kontrol edin.');
+    }
+});
 
     const updateTaskStatus = async (taskId, newStatus) => {
         const response = await fetch(`${API_URL}/tasks/${taskId}/status`, {

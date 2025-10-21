@@ -1,0 +1,34 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  #PostgreSQL Veritabanı
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: teamtaskdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  #Node.js API
+  api:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://myuser:mypassword@db:5432/teamtaskdb"
+      JWT_SECRET: "bu_cok_gizli_ve_tahmin_edilemez_bir_anahtar_olmalı_123!"
+      PORT: 3000
+      
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
