@@ -1,3 +1,4 @@
+// routes/assignments.js
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { protect, authorize } from '../middlewares/authMiddleware.js'; 
@@ -5,23 +6,15 @@ const router = Router();
 const prisma = new PrismaClient();
 
 
-
+// GET /me (Bu fonksiyon değişmedi)
 router.get('/me', protect, async (req, res) => {
     try {
-        
         const userId = req.user.id;
-
         const assignments = await prisma.assignment.findMany({
-            where: {
-                userId: userId, 
-            },
-            include: {
-                task: true, 
-            }
+            where: { userId: userId },
+            include: { task: true }
         });
-
         res.json(assignments);
-
     } catch (error) {
         console.error("'/me' rotasında hata:", error);
         res.status(500).json({ error: 'Görevler alınırken bir hata oluştu.' });
@@ -29,12 +22,11 @@ router.get('/me', protect, async (req, res) => {
 });
 
 
-
-//Read
+// Read (Bu fonksiyon değişmedi)
 router.get('/', async (req, res) => {
   try{
     const assignments = await prisma.assignment.findMany({
-    include: { user: true, task: true },
+      include: { user: true, task: true },
     });
     res.json(assignments);
   }catch (error) {
@@ -42,7 +34,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-//Create
+// Create (Bu fonksiyon değişmedi)
 router.post('/', async(req,res) => {
     try{
       const { userId, taskId } = req.body;
@@ -53,19 +45,43 @@ router.post('/', async(req,res) => {
   }
 });
 
-//Update
+// Update (GÜNCELLENDİ: Artık kısmi güncelleme yapabilir - Sadece userId gönderebilirsiniz)
 router.put('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     try{
       const {id} = req.params;
-      const {userId, taskId} = req.body;
-      const assignment = await prisma.assignment.update({where:{ id }, data:{ userId, taskId}});
+      const {userId, taskId} = req.body; 
+
+      
+      const dataToUpdate = {};
+
+      // Eğer body'de userId geldiyse, objeye ekle
+      if (userId) {
+        dataToUpdate.userId = userId;
+      }
+      // Eğer body'de taskId geldiyse, objeye ekle
+      if (taskId) {
+        dataToUpdate.taskId = taskId;
+      }
+
+      // Eğer hiçbir veri gelmediyse
+      if (Object.keys(dataToUpdate).length === 0) {
+        return res.status(400).json({ error: 'Güncellenecek veri (userId veya taskId) sağlanmadı.' });
+      }
+
+
+      const assignment = await prisma.assignment.update({
+        where:{ id }, 
+        data: dataToUpdate
+      });
+
       res.json(assignment);
     }catch (error) {
-    res.status(500).json({ error: 'Updating assignment failed' });
-  }  
+      console.error("Atama güncelleme hatası:", error);
+      res.status(500).json({ error: 'Updating assignment failed' });
+    }  
 });
 
-//Delete
+
 router.delete('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     try{
       const{id} = req.params;

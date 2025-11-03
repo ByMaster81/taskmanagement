@@ -1,4 +1,4 @@
-
+// schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -11,24 +11,20 @@ datasource db {
 }
 
 
-enum  Role {
+enum Role {
   ADMINUSER
   USER
 }
 
-
-
 model User {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
-  password String
-  role Role @default(USER)
-  tasks Assignment[] 
-
-
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  id               String       @id @default(uuid())
+  name             String
+  email            String       @unique
+  password         String
+  role             Role         @default(USER)
+  tasks            Assignment[]
+  sentMessages     Message[]    @relation("SentMessages")
+  receivedMessages Message[]    @relation("ReceivedMessages")
 }
 
 enum TaskStatus {
@@ -41,18 +37,26 @@ model Task {
   id          String       @id @default(uuid())
   title       String
   description String?
-  status      TaskStatus   @default(PENDING) // pending, in_progress, done
-  assignments Assignment[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  status      TaskStatus   @default(PENDING)
+  
+  // @relation(onDelete: Cascade) buradan KALDIRILDI.
+  assignments Assignment[] 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Assignment {
-  id      String   @id @default(uuid())
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  task    Task     @relation(fields: [taskId], references: [id])
-  taskId  String
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  
+ 
+  // onDelete: Cascade kuralı buraya, 'taskId'yi tutan modele EKLENDİ.
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade) 
+  
+  
+  taskId     String
   assignedAt DateTime @default(now())
   @@unique([userId, taskId])
 }
@@ -63,10 +67,9 @@ model Message {
   content   String
   createdAt DateTime @default(now())
 
-  // İlişkiler: Her mesajın bir göndereni ve bir alıcısı vardır.
-  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
-  senderId  String
-
-  receiver  User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  // Bu kısımlar doğruydu, bir kullanıcı silinince mesajlar da silinir.
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId   String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
 }

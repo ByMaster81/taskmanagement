@@ -1,155 +1,614 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TeamTask Projesi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        body { padding-top: 2rem; padding-bottom: 2rem; }
-        
-        main.container {
-            max-width: 1280px; 
+        :root {
+            --bg-dark-primary: #1a202c; /* Ana koyu arka plan */
+            --bg-dark-secondary: #2d3748; /* Kartlar, input'lar */
+            --bg-dark-tertiary: #4a5568; /* Hover, border */
+            --text-light-primary: #e2e8f0; /* Ana metin rengi */
+            --text-light-secondary: #a0aec0; /* İkincil metin (placeholder) */
+            --primary-blue: #00a8cc; /* Ana Mavi Buton */
+            --primary-blue-hover: #00c0e6;
+            --secondary-gray: #4a5568; /* İkincil Buton (Sil/Kaldır) */
+            --secondary-gray-hover: #718096;
+            --error-red: #e53e3e;
+            --border-radius: 0.375rem; /* 6px */
         }
-        .hidden { display: none; }
-        .error { color: var(--pico-color-red-500); margin-top: 0.5rem; }
-        header { display: flex; justify-content: space-between; align-items: center; }
-        ul li, td { padding: 1rem; }
-        ul li { background-color: var(--card-background-color); border-radius: var(--border-radius); margin-bottom: 0.75rem; }
-        form { display: flex; flex-direction: column; gap: 1rem; }
+
+        /* --- 1. GENEL RESET VE KURULUM --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark-primary);
+            color: var(--text-light-primary);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        main.container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hidden { display: none !important; }
+
+        h2, h3, h4, h5, h6 {
+            margin-bottom: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        p { margin-bottom: 1rem; }
+        a { color: var(--primary-blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* --- 2. FORM ELEMENTLERİ --- */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            background-color: var(--bg-dark-secondary);
+            border: 1px solid var(--bg-dark-tertiary);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            color: var(--text-light-primary);
+            font-size: 1rem;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-light-secondary);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23a0aec0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        label {
+            margin-bottom: -0.75rem;
+            color: var(--text-light-secondary);
+            font-size: 0.875rem;
+        }
+
+        button, button[type="submit"] {
+            background-color: var(--primary-blue);
+            color: var(--bg-dark-primary);
+            font-weight: bold;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover, button[type="submit"]:hover {
+            background-color: var(--primary-blue-hover);
+        }
+        
+        button.secondary {
+            background-color: transparent;
+            border: 1px solid var(--secondary-gray);
+            color: var(--text-light-primary);
+        }
+        button.secondary:hover {
+            background-color: var(--secondary-gray);
+            color: var(--text-light-primary);
+        }
+        button.outline { 
+            padding: 0.5rem 1rem;
+        }
+
+        .error {
+            color: var(--error-red);
+            margin-top: 0;
+            font-size: 0.875rem;
+        }
+
+        #auth-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .login-container {
+            background-color: var(--bg-dark-secondary);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 450px;
+        }
+        .login-container p {
+            color: var(--text-light-secondary);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+      
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-dark-secondary);
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+        header hgroup { margin: 0; }
+        header h2 { margin: 0; }
+        header p { margin: 0.25rem 0 0 0; color: var(--text-light-secondary); }
+        header div {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        details {
+            background-color: var(--bg-dark-secondary);
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--bg-dark-tertiary);
+        }
+        summary {
+            background-color: var(--bg-dark-secondary);
+            padding: 1.25rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--border-radius);
+        }
+        summary:hover {
+            background-color: var(--bg-dark-tertiary);
+        }
+        details[open] summary {
+            background-color: var(--primary-blue);
+            color: var(--bg-dark-primary);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        summary::-webkit-details-marker { display: none; } 
+        summary::marker { display: none; } 
+
+        summary::after {
+            content: '›';
+            font-size: 2rem;
+            font-weight: 200;
+            transition: transform 0.2s;
+            transform: rotate(90deg);
+        }
+        details[open] summary::after {
+            transform: rotate(-90deg);
+            color: var(--bg-dark-primary);
+        }
+        
+        .details-content {
+            padding: 1.5rem;
+            border-top: 1px solid var(--bg-dark-tertiary);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+       
+        .data-list-container {
+            padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .data-header { 
+            display: grid;
+            gap: 1rem;
+            padding: 0 1.5rem 0.75rem 1.5rem;
+            color: var(--text-light-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--bg-dark-tertiary);
+            margin: 1.5rem 1.5rem 1rem 1.5rem; 
+        }
+
+        .data-row { 
+            display: grid;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-dark-primary);
+            border: 1px solid var(--bg-dark-tertiary);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+        }
+        
+        .tasks-header, .task-row {
+            grid-template-columns: 2fr 3fr 1.5fr 1fr;
+        }
+        
+        .assignments-header, .assignment-row {
+            grid-template-columns: 2fr 2fr 1fr;
+        }
+        
+        
+        .users-header, .user-row {
+            grid-template-columns: 2fr 1.5fr 1fr;
+        }
+
+        .data-row span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .data-row button {
+            background-color: var(--secondary-gray);
+            font-weight: normal;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        .data-row button:hover {
+            background-color: var(--secondary-gray-hover);
+        }
+        .data-row select {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        #user-task-list {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        #user-task-list li {
+            background-color: var(--bg-dark-secondary);
+            border: 1px solid var(--bg-dark-tertiary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+        }
+        
+        
+        dialog {
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0;
+            background: transparent;
+            max-width: 1024px;
+            width: 90vw;
+            margin: auto; 
+        }
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
+        }
+
+       
+        dialog article {
+            background-color: var(--bg-dark-secondary);
+            padding: 0;
+            margin: 0;
+            color: var(--text-light-primary);
+        }
+      
+
+        dialog header {
+            border-radius: 0;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            margin: 0;
+            background-color: var(--bg-dark-primary);
+            font-size: 1.2rem;
+            padding: 1.25rem 1.5rem;
+            color: var(--text-light-primary); 
+        }
+        dialog .close {
+            float: right;
+            color: var(--text-light-secondary);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        dialog .close:hover { color: var(--text-light-primary); }
+        
+        dialog .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 0;
+            border-top: 1px solid var(--bg-dark-tertiary);
+        }
+        dialog aside {
+            padding: 1.5rem;
+            border-right: 1px solid var(--bg-dark-tertiary);
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        dialog aside h5 { 
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0; 
+        }
+        dialog #chat-window h6 { 
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0; 
+        }
+
+        dialog #conversations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .conversation-user-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            background-color: var(--bg-dark-secondary);
+            border: 1px solid var(--bg-dark-tertiary);
+            color: var(--text-light-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .conversation-user-btn:hover {
+            background-color: var(--bg-dark-tertiary);
+            text-decoration: none;
+        }
+
+        dialog #chat-window {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+        dialog #message-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: var(--bg-dark-primary);
+            border: 1px solid var(--bg-dark-tertiary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        dialog #message-history p {
+            margin: 0;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--border-radius);
+            max-width: 70%;
+        }
+
+        dialog #message-history p.sender {
+            background-color: var(--primary-blue);
+            color: #FFFFFF; 
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        dialog #message-history p.receiver {
+            background-color: var(--bg-dark-tertiary);
+            color: var(--text-light-primary);
+            align-self: flex-start;
+            text-align: left;
+        }
+        dialog #send-message-form {
+            flex-direction: row;
+            gap: 1rem;
+        }
+        dialog #send-message-form input {
+            flex-grow: 1;
+        }
+        dialog #send-message-form button {
+            white-space: nowrap;
+        }
+        
     </style>
 </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamTask Projesi</title>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      </style>
+</head>
+<body>
+    </body>
+</html>
 <body>
     <main class="container">
 
-        <!-- GÖRÜNÜM 1: GİRİŞ EKRANI -->
         <article id="auth-view">
-            <!-- Giriş Formu -->
-            <form id="login-form">
-                <hgroup>
-                    <h2>Giriş Yap</h2>
-                    <p>Devam etmek için giriş yapın.</p>
-                </hgroup>
-                <input type="email" name="email" placeholder="E-posta Adresi" required>
-                <input type="password" name="password" placeholder="Şifre" required>
-                <p id="login-error" class="error hidden"></p>
-                <button type="submit">Giriş Yap</button>
-                <!--<small>Hesabınız yok mu? <a href="#" id="show-register-link">Kayıt Olun</a></small> -->
-            </form>
-            
-            <!-- Kayıt Formu (Başlangıçta gizli) -->
-            <form id="register-form" class="hidden">
-                <hgroup>
-                    <h2>Kayıt Ol</h2>
-                    <p>Yeni bir hesap oluşturun.</p>
-                </hgroup>
-                <input type="text" name="name" placeholder="İsim Soyisim" required>
-                <input type="email" name="email" placeholder="E-posta Adresi" required>
-                <input type="password" name="password" placeholder="Şifre" required>
-                <p id="register-error" class="error hidden"></p>
-                <button type="submit">Kayıt Ol</button>
-                <small>Zaten bir hesabınız var mı? <a href="#" id="show-login-link">Giriş Yapın</a></small>
-            </form>
+            <div class="login-container">
+                <form id="login-form">
+                    <hgroup>
+                        <h2>Giriş Yap</h2>
+                        <p>Devam etmek için giriş yapın.</p>
+                    </hgroup>
+                    <input type="email" name="email" placeholder="E-posta Adresi" required>
+                    <input type="password" name="password" placeholder="Şifre" required>
+                    <p id="login-error" class="error hidden"></p>
+                    <button type="submit">Giriş Yap</button>
+                    <p class="register-link">Hesabınız yok mu? <a href="#">Kayıt Olun</a></p>
+                </form>
+            </div>
         </article>
 
-        <!-- GÖRÜNÜM 2: ADMİN PANOSU -->
-        <article id="admin-dashboard-view" class="hidden">
-        <header>
-            <hgroup>
-                <h2>Admin Panosu</h2>
-                <p>Yönetim araçlarını ve veri listelerini açmak için başlıklara tıklayın.</p>
-            </hgroup>
-            <button id="admin-logout-btn" class="secondary outline">Çıkış Yap</button>
-        </header>
+        <section id="admin-dashboard-view" class="hidden">
+            <header>
+                <hgroup>
+                    <h2>Admin Panosu</h2>
+                    <p>Yönetim araçlarını ve veri listelerini açmak için başlıklara tıklayın.</p>
+                </hgroup>
+                <div>
+                    <small id="admin-welcome-message"></small>
+                    <button id="open-messaging-center-btn" class="secondary">Mesajlaşma</button>
+                    <button id="admin-logout-btn" class="secondary outline">Çıkış Yap</button>
+                </div>
+            </header>
+            
+            <h3>Yönetim Araçları</h3>
+            
+            <details>
+                <summary>Yeni Kullanıcı Oluştur</summary>
+                <div class="details-content">
+                    <form id="create-user-form">
+                        <input type="text" name="name" placeholder="İsim Soyisim" required>
+                        <input type="email" name="email" placeholder="E-posta Adresi" required>
+                        <input type="password" name="password" placeholder="Geçici Şifre" required>
+                        <label for="role-select">Rol Seç</label>
+                        <select id="role-select" name="role">
+                            <option value="USER">Standart Kullanıcı (USER)</option>
+                            <option value="ADMINUSER">Admin (ADMINUSER)</option>
+                        </select>
+                        <button type="submit">Kullanıcıyı Oluştur</button>
+                    </form>
+                </div>
+            </details>
 
-        <!-- 1. BÖLÜM: YÖNETİM FORMLARI -->
-        <h3>Yönetim Araçları</h3>
-        
-        <!-- Yeni Kullanıcı Oluşturma (Açılır-Kapanır) -->
-        <details>
-            <summary role="button" class="secondary">Yeni Kullanıcı Oluştur</summary>
-            <form id="create-user-form">
-                <input type="text" name="name" placeholder="İsim Soyisim" required>
-                <input type="email" name="email" placeholder="E-posta Adresi" required>
-                <input type="password" name="password" placeholder="Geçici Şifre" required>
-                <label for="role-select">Rol Seç</label>
-                <select id="role-select" name="role">
-                    <option value="USER">Standart Kullanıcı (USER)</option>
-                    <option value="ADMINUSER">Admin (ADMINUSER)</option>
-                </select>
-                <button type="submit">Kullanıcıyı Oluştur</button>
-            </form>
-        </details>
+            <details>
+                <summary>Yeni Görev Oluştur</summary>
+                <div class="details-content">
+                    <form id="create-task-form">
+                        <input type="text" name="title" placeholder="Görev Başlığı" required>
+                        <textarea name="description" placeholder="Görev Açıklaması" rows="3"></textarea>
+                        <button type="submit">Görevi Oluştur</button>
+                    </form>
+                </div>
+            </details>
 
-        <!-- Yeni Görev Oluşturma (Açılır-Kapanır) -->
-        <details>
-            <summary role="button" class="secondary">Yeni Görev Oluştur</summary>
-            <form id="create-task-form">
-                <input type="text" name="title" placeholder="Görev Başlığı" required>
-                <textarea name="description" placeholder="Görev Açıklaması"></textarea>
-                <button type="submit">Görevi Oluştur</button>
-            </form>
-        </details>
+            <details>
+                <summary>Görev Ata</summary>
+                <div class="details-content">
+                    <form id="assign-task-form">
+                        <label for="user-select">Kullanıcı Seç</label>
+                        <select id="user-select" name="userId" required>
+                            <option value="">Yükleniyor...</option>
+                        </select>
+                        <label for="task-select">Görev Seç</label>
+                        <select id="task-select" name="taskId" required>
+                            <option value="">Yükleniyor...</option>
+                        </select>
+                        <button type="submit">Görevi Ata</button>
+                    </form>
+                </div>
+            </details>
+            
+            <h3>Veri Listeleri</h3>
 
-        <!-- Görev Atama (Açılır-Kapanır) -->
-        <details>
-            <summary role="button" class="secondary">Görev Ata</summary>
-            <form id="assign-task-form">
-                <label for="user-select">Kullanıcı Seç</label>
-                <select id="user-select" name="userId" required>
-                    <option value="">Yükleniyor...</option>
-                </select>
-                <label for="task-select">Görev Seç</label>
-                <select id="task-select" name="taskId" required>
-                    <option value="">Yükleniyor...</option>
-                </select>
-                <button type="submit">Görevi Ata</button>
-            </form>
-        </details>
+            <details open>
+                <summary>Tüm Kullanıcılar</summary>
+                <div class="data-header users-header">
+                    <span>İsim</span>
+                    <span>Rol</span>
+                    <span>İşlem</span>
+                </div>
+                <div id="admin-user-list" class="data-list-container">
+                    </div>
+            </details>
 
-        <hr>
+            <details open>
+                <summary>Tüm Görevler</summary>
+                <div class="data-header tasks-header">
+                    <span>Görev Başlığı</span>
+                    <span>Açıklama</span>
+                    <span>Durum Değiştir</span>
+                    <span>İşlem</span>
+                </div>
+                <div id="admin-task-list" class="data-list-container">
+                    </div>
+            </details>
 
-        <!-- 2. BÖLÜM: VERİ LİSTELERİ -->
-        <h3>Veri Listeleri</h3>
+            <details open>
+                <summary>Tüm Atamalar</summary>
+                <div class="data-header assignments-header">
+                    <span>Görev</span>
+                    <span>Atanan Kullanıcı (Değiştirmek için seçin)</span>
+                    <span>İşlem</span>
+                </div>
+                <div id="admin-assignment-list" class="data-list-container">
+                    </div>
+            </details>
+        </section>
 
-        <!-- Tüm Kullanıcılar (Açılır-Kapanır) -->
-        <details open> <!-- 'open' attribute'ü başlangıçta açık gelmesini sağlar -->
-            <summary role="button">Tüm Kullanıcılar</summary>
-            <figure>
-                <table role="grid" id="admin-user-table">
-                    <!-- ... tablo başlıkları aynı ... -->
-                    <tbody id="admin-user-list"></tbody>
-                </table>
-            </figure>
-        </details>
-        
-        <!-- Tüm Atamalar (Açılır-Kapanır) -->
-        <details open>
-            <summary role="button">Tüm Atamalar</summary>
-            <figure>
-                <table role="grid" id="admin-assignment-table">
-                    <!-- ... tablo başlıkları aynı ... -->
-                    <tbody id="admin-assignment-list"></tbody>
-                </table>
-            </figure>
-        </details>
-
-    </article> <!-- Admin Panosu Bitişi -->
-
-        
-        <article id="user-dashboard-view" class="hidden">
+        <section id="user-dashboard-view" class="hidden">
             <header>
                 <hgroup>
                     <h2>Görevlerim</h2>
                     <p>Size atanmış olan tüm görevler listeleniyor.</p>
                 </hgroup>
-                <button id="user-logout-btn" class="secondary outline">Çıkış Yap</button>
+                <div>
+                    <small id="user-welcome-message"></small>
+                    <button id="open-messaging-center-btn-user" class="secondary">Mesajlaşma</button>
+                    <button id="user-logout-btn" class="secondary outline">Çıkış Yap</button>
+                </div>
             </header>
-            <ul id="user-task-list"></ul>
-        </article>
+            <ul id="user-task-list">
+                </ul>
+        </section>
 
     </main>
 
+    <dialog id="message-modal">
+        <article>
+            <header>
+                <a href="#close" aria-label="Close" class="close" id="close-modal-btn">×</a>
+                Merkezi Mesajlaşma
+            </header>
+            <div class="modal-grid"> 
+                <aside>
+                    <h5>Konuşmalar</h5>
+                    <div id="conversations-list">
+                        </div>
+                </aside>
+                <section id="chat-window" class="hidden">
+                    <h6 id="chat-partner-name"></h6>
+                    <div id="message-history">
+                        </div>
+                    <form id="send-message-form">
+                        <input type="text" id="message-content" name="content" placeholder="Mesajınızı yazın..." autocomplete="off" required>
+                        <input type="hidden" id="receiver-id" name="receiverId">
+                        <button type="submit">Gönder</button>
+                    </form>
+                </section>
+            </div>
+        </article>
+    </dialog>
+    
     <script src="app.js"></script>
 </body>
 </html>
