@@ -41,7 +41,7 @@ Bu projenin en güzel yanlarından biri, Docker sayesinde tek bir komutla tüm s
 1.  **Projeyi klonlayın:**
 
     ```bash
-    git clone [https://github.com/ByMaster81/taskmanagement](https://github.com/ByMaster81/taskmanagement)
+    git clone https://github.com/ByMaster81/taskmanagement
     cd proje-adi
     ```
 
