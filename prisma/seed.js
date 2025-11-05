@@ -30,7 +30,7 @@ async function main() {
 
   const memberUser = await prisma.user.create({
     data: {
-      name: 'Işınsu Yakışıklı',
+      name: 'Isınsu Yakısıklı',
       email: 'isinsu.yakisikli@std.yeditepe.edu.tr',
       password: userPassword,
       role: Role.USER, 
