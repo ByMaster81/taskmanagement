@@ -11,7 +11,7 @@ async function main() {
   await prisma.assignment.deleteMany();
   await prisma.task.deleteMany();
   await prisma.user.deleteMany();
-  console.log('✅ Veritabanı temizlendi.');
+  console.log('Veritabanı temizlendi.');
 
   
 
@@ -81,7 +81,7 @@ async function main() {
     },
   });
 
-  console.log('📋 Görevler oluşturuldu.');
+  console.log('Görevler oluşturuldu.');
 
 
   await prisma.assignment.create({
@@ -113,8 +113,8 @@ async function main() {
     },
   });
 
-  console.log('🔗 Atamalar yapıldı.');
-  console.log('🎉 Seed verisi başarıyla eklendi!');
+  console.log('Atamalar yapıldı.');
+  console.log('Seed verisi başarıyla eklendi!');
 }
 
 main()

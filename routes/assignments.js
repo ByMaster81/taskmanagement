@@ -6,7 +6,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 
-// GET /me (Bu fonksiyon değişmedi)
+// GET /me 
 router.get('/me', protect, async (req, res) => {
     try {
         const userId = req.user.id;
@@ -22,7 +22,7 @@ router.get('/me', protect, async (req, res) => {
 });
 
 
-// Read (Bu fonksiyon değişmedi)
+// Read 
 router.get('/', async (req, res) => {
   try{
     const assignments = await prisma.assignment.findMany({
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Create (Bu fonksiyon değişmedi)
+// Create 
 router.post('/', async(req,res) => {
     try{
       const { userId, taskId } = req.body;
@@ -45,7 +45,7 @@ router.post('/', async(req,res) => {
   }
 });
 
-// Update (GÜNCELLENDİ: Artık kısmi güncelleme yapabilir - Sadece userId gönderebilirsiniz)
+// Update 
 router.put('/:id', protect, authorize('ADMINUSER'), async (req, res) => {
     try{
       const {id} = req.params;
